@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.ComboBox?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.control.Button?>
+
+
+<AnchorPane xmlns="http://javafx.com/javafx"
+            xmlns:fx="http://javafx.com/fxml"
+            fx:controller="controllers.AjouterDonsController">
+   <children>
+      <Label text="Sélectionner un utilisateur :" layoutX="20" layoutY="20"/>
+      <ComboBox fx:id="userComboBox" layoutX="180" layoutY="20"/>
+
+      <Label text="Nombre de points de don :" layoutX="20" layoutY="60"/>
+      <TextField fx:id="donPointsField" layoutX="180" layoutY="60"/>
+
+      <Button text="Ajouter Don" layoutX="20" layoutY="100" onAction="#handleAjouterDon"/>
+   </children>
+</AnchorPane>
