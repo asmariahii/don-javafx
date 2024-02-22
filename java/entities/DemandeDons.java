@@ -1,13 +1,26 @@
 package entities;
 
 import java.sql.Timestamp;
+import java.util.Comparator;
 
 public class DemandeDons {
+    public static Comparator<DemandeDons> sortByNomUser() {
+        return Comparator.comparing(d -> d.getNomUser().toLowerCase());
+    }
+
+    // Méthode de tri par date de publication
+    public static Comparator<DemandeDons> sortByDatePublication() {
+        return Comparator.comparing(DemandeDons::getDatePublication);
+    }
     private int idDemande;
+    private int idDons;
     private int idUtilisateur;
     private String contenu;
     private String image;
     private Timestamp datePublication;
+    private String nomUser;
+    private String prenomUser;
+    private int nbPoints;
 
     private int idUser;
 
@@ -63,11 +76,40 @@ public class DemandeDons {
     public void setDatePublication(Timestamp datePublication) {
         this.datePublication = datePublication;
     }
+
     public int getIdUser() {
         return idUser;
     }
 
     public void setIdUser(int idUser) {
         this.idUser = idUser;
+    }
+
+    public String getNomUser() {
+        return nomUser;
+    }
+
+    public void setNomUser(String nomUser) {
+        this.nomUser = nomUser;
+    }
+
+    public String getPrenomUser() {
+        return prenomUser;
+    }
+
+    public void setPrenomUser(String prenomUser) {
+        this.prenomUser = prenomUser;
+    }
+
+    public int getNbPoints() {
+        return nbPoints;
+    }
+
+    public void setNbPoints(int nbPoints) {
+        this.nbPoints = nbPoints;
+    }
+
+    public int getIdDons() {
+        return idDons;
     }
 }

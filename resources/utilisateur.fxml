@@ -15,7 +15,7 @@
             <children>
             <ImageView fitHeight="120.0" fitWidth="224.0">
                <image>
-                  <Image url="@../../../../../Downloads/416672675_1952227775180465_3267864515125709562_n.png" />
+                   <Image url="@/img/espritmarket.png" />
                </image>
             </ImageView>
                 <Label fx:id="welcomeLabel" text="Bonjour Utilisateur! Bienvenue sur notre plateforme de dons." textAlignment="CENTER">

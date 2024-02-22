@@ -56,8 +56,14 @@ public class UtilisateurController {
     }
 
     private void handleDemanderDons(ActionEvent event) {
-        // Code pour gérer l'action lorsque l'utilisateur clique sur le bouton "Demander dons"
-        System.out.println("L'utilisateur " + currentUser.getNomUser() + " souhaite demander des dons.");
-        // Ajoutez votre code pour passer à l'écran de demande de dons ou effectuer d'autres actions nécessaires
+        try {
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/demande_dons.fxml"));
+            Parent root = loader.load();
+            Stage stage = new Stage();
+            stage.setScene(new Scene(root));
+            stage.show();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 }
