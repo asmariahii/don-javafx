@@ -6,9 +6,8 @@ import utils.DataSource;
 
 import java.sql.*;
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
+import java.util.*;
 import java.util.Date;
-import java.util.List;
 
 public class DonsService implements IServiceDons {
     private Connection conn;
@@ -17,6 +16,33 @@ public class DonsService implements IServiceDons {
     public DonsService() {
         conn = DataSource.getInstance().getCnx();
     }
+
+    // Méthode pour récupérer les dons d'un utilisateur spécifique par son ID
+    public List<Dons> getDonsByUserId(int userId) {
+        List<Dons> donsList = new ArrayList<>();
+        String query = "SELECT * FROM dons WHERE idUser = ?";
+
+        try (PreparedStatement statement = conn.prepareStatement(query)) {
+            statement.setInt(1, userId);
+            ResultSet resultSet = statement.executeQuery();
+
+            while (resultSet.next()) {
+                Dons don = new Dons();
+                don.setIdDons(resultSet.getInt("idDons"));
+                don.setIdUser(resultSet.getInt("idUser"));
+                don.setNbPoints(resultSet.getInt("nbpoints"));
+                don.setDate_ajout(resultSet.getTimestamp("date_ajout"));
+                don.setEtatStatutDons(resultSet.getString("etatStatutDons"));
+                donsList.add(don);
+            }
+        } catch (SQLException e) {
+            e.printStackTrace(); // Gérez les exceptions de manière appropriée
+        }
+
+        return donsList;
+    }
+
+
     public List<Dons> getAllDonsWithUserDetails() {
         List<Dons> donsList = new ArrayList<>();
         String query = "SELECT D.idDons, D.idUser, U.nomUser, U.prenomUser, U.emailUser, U.numTel, D.nbPoints, D.date_ajout, D.etatStatutDons " +
@@ -204,6 +230,43 @@ public class DonsService implements IServiceDons {
 
         return donsList;
     }
+    @Override
+    public int addDonsWithStatus(utilisateur user, int donPoints) {
+        try {
+            // Obtenir la date actuelle
+            Date dateAjout = new Date();
+            SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+            String dateAjoutString = sdf.format(dateAjout);
+
+            // Ajouter le don avec la date actuelle et l'état du statut par défaut "En cours"
+            String insertQuery = "INSERT INTO Dons (idUser, nbpoints, date_ajout, etatStatutDons) VALUES (?, ?, ?, ?)";
+            pst = conn.prepareStatement(insertQuery);
+            pst.setInt(1, user.getIdUser());
+            pst.setInt(2, donPoints);
+            pst.setString(3, dateAjoutString);
+            pst.setString(4, "En cours"); // Par défaut, l'état du statut est "En cours"
+            pst.executeUpdate();
+
+            System.out.println("Don ajouté avec succès.");
+
+            // Soustraire les points du don de l'utilisateur
+            utilisateurService userService = new utilisateurService();
+            int remainingPoints = user.getNbPoints() - donPoints;
+            userService.updateUserPoints(user.getIdUser(), remainingPoints);
+
+            // Afficher les points de l'utilisateur après l'ajout du don
+            System.out.println("Points de l'utilisateur après l'ajout du don : " + remainingPoints);
+
+            return remainingPoints;
+        } catch (SQLException e) {
+            System.out.println("Erreur lors de l'ajout du don: " + e.getMessage());
+            return -1;
+        } finally {
+            closeStatement();
+        }
+    }
+
+
 
 
     @Override
@@ -239,14 +302,15 @@ public class DonsService implements IServiceDons {
         }
     }
 
+
     @Override
-    public void updateDons(int donsId, int newPoints, String newEtatStatutDons) {
+    public void updateDons(Dons don) {
         try {
             String query = "UPDATE Dons SET nbpoints = ?, etatStatutDons = ? WHERE idDons = ?";
             pst = conn.prepareStatement(query);
-            pst.setInt(1, newPoints);
-            pst.setString(2, newEtatStatutDons);
-            pst.setInt(3, donsId);
+            pst.setInt(1, don.getNbPoints());
+            pst.setString(2, don.getEtatStatutDons());
+            pst.setInt(3, don.getIdDons());
             pst.executeUpdate();
             System.out.println("Don mis à jour avec succès.");
         } catch (SQLException e) {
@@ -255,6 +319,7 @@ public class DonsService implements IServiceDons {
             closeStatement();
         }
     }
+
 
     public void addEtatStatutDons(int donsId, String nouvelEtat) {
         try {
@@ -271,32 +336,21 @@ public class DonsService implements IServiceDons {
         }
     }
 
-    public void updateEtatStatutDons(int donsId, String newEtatStatutDons) {
+    public void updateEtatStatutDons(int donsId, String nouvelEtat) {
         try {
-            // Vérifier si le don avec l'ID donné existe
-            String checkQuery = "SELECT * FROM Dons WHERE idDons = ?";
-            pst = conn.prepareStatement(checkQuery);
-            pst.setInt(1, donsId);
-            ResultSet rs = pst.executeQuery();
-            if (!rs.next()) {
-                System.out.println("Erreur : Aucun don trouvé avec l'ID " + donsId);
-                return;
-            }
-
-            // Mettre à jour l'état du statut de don dans la table Dons
-            String updateQuery = "UPDATE Dons SET etatStatutDons = ? WHERE idDons = ?";
-            pst = conn.prepareStatement(updateQuery);
-            pst.setString(1, newEtatStatutDons);
+            String query = "UPDATE Dons SET etatStatutDons = ? WHERE idDons = ?";
+            pst = conn.prepareStatement(query);
+            pst.setString(1, nouvelEtat);
             pst.setInt(2, donsId);
             pst.executeUpdate();
-
-            System.out.println("État du statut de don mis à jour avec succès pour le don avec l'ID : " + donsId);
+            System.out.println("État du statut de don mis à jour avec succès.");
         } catch (SQLException e) {
             System.out.println("Erreur lors de la mise à jour de l'état du statut de don : " + e.getMessage());
         } finally {
             closeStatement();
         }
     }
+
 
     public boolean deleteEtatStatutDons(String etatStatutDons) {
         try {
@@ -363,9 +417,49 @@ public class DonsService implements IServiceDons {
         return -1; // Retourne -1 si aucune ID n'est trouvée ou s'il y a une erreur
     }
  //   @Override
+ public int getDonsIdByEmail(String email) throws SQLException {
+     String query = "SELECT idDons FROM Dons JOIN Utilisateur ON Dons.idUser = Utilisateur.idUser WHERE emailUser = ?";
+     try (PreparedStatement pst = conn.prepareStatement(query)) {
+         pst.setString(1, email);
+         try (ResultSet rs = pst.executeQuery()) {
+             if (rs.next()) {
+                 return rs.getInt("idDons");
+             }
+         }
+     }
+     // Gérer le cas où aucun don n'est associé à cet e-mail
+     return -1;
+ }
 
+    // Méthode pour récupérer tous les e-mails des utilisateurs
+    public List<String> getAllUserEmailsAndPoints() throws SQLException {
+        List<String> userEmailsAndPoints = new ArrayList<>();
+        String query = "SELECT Utilisateur.emailUser, Dons.nbPoints " +
+                "FROM Utilisateur " +
+                "JOIN Dons ON Utilisateur.idUser = Dons.idUser";
+        try (PreparedStatement pst = conn.prepareStatement(query); ResultSet rs = pst.executeQuery()) {
+            while (rs.next()) {
+                String userEmail = rs.getString("emailUser");
+                int nbPoints = rs.getInt("nbPoints");
+                String userEmailAndPoints = userEmail + " - " + nbPoints;
+                userEmailsAndPoints.add(userEmailAndPoints);
+            }
+        }
+        return userEmailsAndPoints;
+    }
 
-
+    public Map<String, Integer> getAllUserNbPoints() throws SQLException {
+        Map<String, Integer> userNbPoints = new HashMap<>();
+        String query = "SELECT emailUser, nbPoints FROM Utilisateur JOIN Dons ON Utilisateur.idUser = Dons.idUser";
+        try (PreparedStatement pst = conn.prepareStatement(query); ResultSet rs = pst.executeQuery()) {
+            while (rs.next()) {
+                String email = rs.getString("emailUser");
+                int nbPoints = rs.getInt("nbPoints");
+                userNbPoints.put(email, nbPoints);
+            }
+        }
+        return userNbPoints;
+    }
 
 
 

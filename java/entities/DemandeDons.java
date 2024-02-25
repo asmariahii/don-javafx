@@ -1,17 +1,13 @@
 package entities;
 
 import java.sql.Timestamp;
-import java.util.Comparator;
+
+import javafx.beans.property.IntegerProperty;
+import javafx.beans.property.SimpleIntegerProperty;
 
 public class DemandeDons {
-    public static Comparator<DemandeDons> sortByNomUser() {
-        return Comparator.comparing(d -> d.getNomUser().toLowerCase());
-    }
+    private final IntegerProperty idDemandeProperty = new SimpleIntegerProperty();
 
-    // Méthode de tri par date de publication
-    public static Comparator<DemandeDons> sortByDatePublication() {
-        return Comparator.comparing(DemandeDons::getDatePublication);
-    }
     private int idDemande;
     private int idDons;
     private int idUtilisateur;
@@ -35,7 +31,9 @@ public class DemandeDons {
     public DemandeDons() {
 
     }
-
+    public IntegerProperty idDemandeProperty() {
+        return idDemandeProperty;
+    }
     // Getters and Setters
     public int getIdDemande() {
         return idDemande;

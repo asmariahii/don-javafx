@@ -13,9 +13,9 @@
     <children>
         <VBox alignment="CENTER" spacing="20.0" AnchorPane.bottomAnchor="20.0" AnchorPane.leftAnchor="20.0" AnchorPane.rightAnchor="20.0" AnchorPane.topAnchor="20.0">
             <children>
-            <ImageView fitHeight="120.0" fitWidth="224.0">
+            <ImageView fitHeight="139.0" fitWidth="232.0">
                <image>
-                   <Image url="@/img/espritmarket.png" />
+                  <Image url="@/img/espritmarket.png" />
                </image>
             </ImageView>
                 <Label fx:id="welcomeLabel" text="Bonjour Utilisateur! Bienvenue sur notre plateforme de dons." textAlignment="CENTER">

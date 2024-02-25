@@ -40,6 +40,10 @@ public class Dons {
         this.numTel = new SimpleStringProperty(numTel);
     }
 
+    @Override
+    public String toString() {
+        return "Dons [nomUser=" + nomUser + ", prenomUser=" + prenomUser + ", nbPoints=" + nbPoints + ", date_ajout=" + date_ajout + ", etatStatutDons=" + etatStatutDons + "]";
+    }
 
     
    

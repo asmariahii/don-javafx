@@ -11,6 +11,8 @@ import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.control.Button;
 import entities.Dons;
+import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
 import javafx.stage.Stage;
 import service.DonsService;
 
@@ -110,16 +112,46 @@ public class AfficherDonsController {
 
         loadDons();
     }
+    @FXML
+    private void handleAjouterEtatStatut() {
+        try {
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/AjouterEtatStatut.fxml"));
+            Parent root = loader.load();
+            AjouterEtatStatutController ajouterEtatStatutController = loader.getController();
+            ajouterEtatStatutController.initialize();
+            Stage stage = new Stage();
+            stage.setScene(new Scene(root));
+            stage.setTitle("Ajouter Etat statut de dons");
+            stage.showAndWait(); // Attendre que la fenêtre soit fermée
+            loadDons(); // Recharger les dons après avoir ajouté l'état ou le statut
+        } catch (Exception e) {
+            e.printStackTrace();
+            showAlert(Alert.AlertType.ERROR, "Erreur", "Impossible d'ouvrir la vue pour ajouter un don.");
+        }
+    }
+
+
+
 
     private void addSupprimerButtonToTable() {
         TableColumn<Dons, Void> colSupprimer = new TableColumn<>("Supprimer");
+
+        // Créer une cellule de table personnalisée avec une icône de suppression
         Callback<TableColumn<Dons, Void>, TableCell<Dons, Void>> cellFactory = new Callback<>() {
             @Override
             public TableCell<Dons, Void> call(final TableColumn<Dons, Void> param) {
                 final TableCell<Dons, Void> cell = new TableCell<>() {
-                    private final Button btn = new Button("Supprimer");
+                    private final Button btn = new Button();
 
                     {
+                        // Ajouter une icône de suppression au bouton
+                        Image image = new Image(getClass().getResourceAsStream("/img/deleteimg.png"));
+                        ImageView imageView = new ImageView(image);
+                        imageView.setFitWidth(16); // Ajustez la taille de l'icône si nécessaire
+                        imageView.setFitHeight(16);
+                        btn.setGraphic(imageView);
+
+                        // Définir l'action du bouton
                         btn.setOnAction((event) -> {
                             Dons don = getTableView().getItems().get(getIndex());
                             supprimerDon(don);
@@ -139,9 +171,14 @@ public class AfficherDonsController {
                 return cell;
             }
         };
+
+        // Définir la cellule de la colonne Supprimer
         colSupprimer.setCellFactory(cellFactory);
+
+        // Ajouter la colonne Supprimer à la TableView
         donsTable.getColumns().add(colSupprimer);
     }
+
 
 
     private void showAlert(Alert.AlertType alertType, String title, String message) {
@@ -167,4 +204,5 @@ public class AfficherDonsController {
             showAlert(Alert.AlertType.ERROR, "Erreur de suppression", "Impossible de supprimer le don.");
         }
     }
+
 }

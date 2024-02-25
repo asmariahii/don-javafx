@@ -16,8 +16,11 @@ public interface IServiceDons {
 
     List<Dons> getAllDons();
 
+
     void addDons(utilisateur user, int donPoints, String etatStatutDons);
 
-    void updateDons(int donsId, int newPoints, String newEtatStatutDons);
+    int addDonsWithStatus(utilisateur user, int donPoints);
 
+
+    void updateDons(Dons don);
 }

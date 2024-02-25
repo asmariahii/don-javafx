@@ -85,7 +85,7 @@ public class AjouterDonsController {
             return;
         }
 
-        donsService.addDons(selectedUser, donPoints);
+        donsService.addDonsWithStatus(selectedUser, donPoints);
 
         showAlert(Alert.AlertType.INFORMATION, "Succès", "Don ajouté avec succès pour l'utilisateur " + selectedUser.getIdUser());
 

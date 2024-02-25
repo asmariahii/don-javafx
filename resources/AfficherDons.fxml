@@ -5,27 +5,25 @@
 <?import javafx.scene.control.TableView?>
 <?import javafx.scene.layout.AnchorPane?>
 
-<AnchorPane xmlns="http://javafx.com/javafx"
-            xmlns:fx="http://javafx.com/fxml"
-            fx:controller="controllers.AfficherDonsController">
+<AnchorPane prefHeight="609.0" prefWidth="974.0" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controllers.AfficherDonsController">
     <!-- Bouton Ajouter -->
-    <Button text="Ajouter Don" onAction="#handleAjouterDon" layoutX="100" layoutY="50"/>
-    <Button text="Supprimer Dons" onAction="#handleSupprimerDon" layoutX="100" layoutY="150"/>
+    <Button layoutX="27.0" layoutY="56.0" onAction="#handleAjouterDon" text="Ajouter Don pour un utilisateur" />
+    <Button layoutX="27.0" layoutY="14.0" onAction="#handleAjouterEtatStatut" text="Ajouter Don Etat statut dons" />
+
+    <Button layoutX="100" layoutY="150" onAction="#handleSupprimerDon" text="Supprimer Dons" />
 
     <!-- TableView pour afficher les dons -->
-    <TableView fx:id="donsTable" layoutX="10.0" layoutY="10.0" prefHeight="200.0" prefWidth="600.0">
+    <TableView fx:id="donsTable" layoutX="6.0" layoutY="120.0" prefHeight="474.0" prefWidth="944.0">
         <columns>
             <!-- Colonnes existantes pour les données des dons -->
-            <TableColumn fx:id="nomUserColumn" text="Nom"/>
-            <TableColumn fx:id="prenomUserColumn" text="Prénom"/>
-            <TableColumn fx:id="emailUserColumn" text="Email"/>
-            <TableColumn fx:id="numTelColumn" text="Numéro de téléphone"/>
-            <TableColumn fx:id="nbPointsColumn" text="Nombre de Points"/>
-            <TableColumn fx:id="dateAjoutColumn" text="Date d'Ajout"/>
-            <TableColumn fx:id="etatStatutDonsColumn" text="État du Statut des Dons"/>
+            <TableColumn fx:id="nomUserColumn" text="Nom" />
+            <TableColumn fx:id="prenomUserColumn" text="Prénom" />
+            <TableColumn fx:id="emailUserColumn" text="Email" />
+            <TableColumn fx:id="numTelColumn" prefWidth="135.20001220703125" text="Numéro de téléphone" />
+            <TableColumn fx:id="nbPointsColumn" prefWidth="113.5999755859375" text="Nombre de Points" />
+            <TableColumn fx:id="dateAjoutColumn" prefWidth="113.5999755859375" text="Date d'Ajout" />
+            <TableColumn fx:id="etatStatutDonsColumn" prefWidth="151.20001220703125" text="État du Statut des Dons" />
 
-            <!-- Nouvelle colonne pour le bouton "Ajouter" -->
-            <TableColumn fx:id="ajouterColumn" text="Ajouter"/>
         </columns>
     </TableView>
 </AnchorPane>

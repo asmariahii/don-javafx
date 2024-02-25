@@ -5,17 +5,18 @@
 <?import javafx.scene.control.TextArea?>
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.layout.VBox?>
+<?import javafx.scene.text.TextFlow?>
 
-<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controllers.DemandeDonsController">
-
+<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="628.0" prefWidth="804.0" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controllers.DemandeDonsController">
     <children>
-        <VBox alignment="CENTER" spacing="20.0" AnchorPane.bottomAnchor="20.0" AnchorPane.leftAnchor="20.0" AnchorPane.rightAnchor="20.0" AnchorPane.topAnchor="20.0">
+        <VBox alignment="CENTER" prefWidth="728.0" spacing="20.0" AnchorPane.bottomAnchor="20.0" AnchorPane.leftAnchor="20.0" AnchorPane.rightAnchor="20.0" AnchorPane.topAnchor="20.0">
             <children>
-                <TextArea fx:id="contenuTextArea" promptText="Contenu de la demande" />
+            <TextFlow prefHeight="82.0" prefWidth="764.0" />
+                <TextArea fx:id="contenuTextArea" prefHeight="63.0" prefWidth="589.0" promptText="Contenu de la demande" />
                 <!-- Ajoutez le composant pour l'image ici si nécessaire -->
                 <Button fx:id="posterDemandeButton" onAction="#posterDemande" text="Poster Demande" />
                 <Button fx:id="transferButton" onAction="#transferPoints" text="Transférer Points" />
-                <ListView fx:id="demandeListView" prefHeight="200.0" prefWidth="200.0" />
+                <ListView fx:id="demandeListView" prefHeight="151.0" prefWidth="560.0" />
             </children>
         </VBox>
     </children>

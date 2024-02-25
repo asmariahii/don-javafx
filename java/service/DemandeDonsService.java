@@ -5,6 +5,7 @@ import utils.DataSource;
 
 import java.sql.*;
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
 
 public class DemandeDonsService {
@@ -138,12 +139,13 @@ public class DemandeDonsService {
 
     public List<DemandeDons> getDemandesAvecUsers() {
         List<DemandeDons> demandesAvecUsers = new ArrayList<>();
-        String query = "SELECT d.contenu, d.datePublication, d.nbpoints, u.nomUser, u.prenomUser " +
+        String query = "SELECT d.idDemande, d.contenu, d.datePublication, d.nbpoints, u.nomUser, u.prenomUser " +
                 "FROM demandedons d " +
                 "JOIN utilisateur u ON d.idUtilisateur = u.idUser";
         try (PreparedStatement pst = conn.prepareStatement(query);
              ResultSet rs = pst.executeQuery()) {
             while (rs.next()) {
+                int idDemande = rs.getInt("idDemande"); // Ajout de la récupération de l'ID de la demande
                 String contenu = rs.getString("contenu");
                 Timestamp datePublication = rs.getTimestamp("datePublication");
                 int nbPoints = rs.getInt("nbpoints");
@@ -151,6 +153,7 @@ public class DemandeDonsService {
                 String prenomUser = rs.getString("prenomUser");
 
                 DemandeDons demande = new DemandeDons();
+                demande.setIdDemande(idDemande); // Définition de l'ID de la demande
                 demande.setContenu(contenu);
                 demande.setDatePublication(datePublication);
                 demande.setNbPoints(nbPoints);
@@ -165,22 +168,39 @@ public class DemandeDonsService {
         return demandesAvecUsers;
     }
 
-    public boolean supprimerDemandes(int idDemande, int idUtilisateur, String contenu, String image, Timestamp datePublication, int idDons, int nbPoints, String nomUser, String prenomUser) {
-        String query = "DELETE FROM demandedons WHERE idDemande = ? AND idUtilisateur = ? AND contenu = ? AND image = ? AND datePublication = ? AND idDons = ? AND nbPoints = ? AND nomUser = ? AND prenomUser = ?";
-        try {
-            pst = conn.prepareStatement(query);
-            pst.setInt(1, idDemande);
-            pst.setInt(2, idUtilisateur);
-            pst.setString(3, contenu);
-            pst.setString(4, image);
-            pst.setTimestamp(5, datePublication);
-            pst.setInt(6, idDons);
-            pst.setInt(7, nbPoints);
-            pst.setString(8, nomUser);
-            pst.setString(9, prenomUser);
 
+    public boolean deleteDemandeByUserId(int idUtilisateur) {
+        String query = "DELETE FROM demandedons WHERE idUtilisateur = ?";
+        try (PreparedStatement pst = conn.prepareStatement(query)) {
+            pst.setInt(1, idUtilisateur);
+            int rowsDeleted = pst.executeUpdate();
+            System.out.println(rowsDeleted + " lignes ont été supprimées de la table demandedons pour l'utilisateur avec l'ID : " + idUtilisateur);
+            return rowsDeleted > 0;
+        } catch (SQLException e) {
+            e.printStackTrace();
+            return false;
+        }
+    }
+    public boolean supprimerDemandes(int idDemande) {
+        String query = "DELETE FROM demandedons WHERE idDemande = ?";
+        try (PreparedStatement pst = conn.prepareStatement(query)) {
+            pst.setInt(1, idDemande);
             int rowsDeleted = pst.executeUpdate();
             return rowsDeleted > 0;
+        } catch (SQLException e) {
+            e.printStackTrace();
+            return false;
+        }
+    }
+    public boolean incrementerNbPointsDemande(int idDemande, int nbPointsAjoutes) {
+        String query = "UPDATE demandedons SET nbpoints = nbpoints + ? WHERE idDemande = ?";
+        try {
+            pst = conn.prepareStatement(query);
+            pst.setInt(1, nbPointsAjoutes);
+            pst.setInt(2, idDemande);
+
+            int rowsUpdated = pst.executeUpdate();
+            return rowsUpdated > 0;
         } catch (SQLException e) {
             e.printStackTrace();
             return false;
@@ -189,7 +209,9 @@ public class DemandeDonsService {
 
 
 
-
-
-
 }
+
+
+
+
+

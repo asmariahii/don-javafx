@@ -1,5 +1,4 @@
 <?xml version="1.0" encoding="UTF-8"?>
-
 <?import javafx.scene.control.TableColumn?>
 <?import javafx.scene.control.TableView?>
 <?import javafx.scene.layout.VBox?>
@@ -13,7 +12,6 @@
             <TableColumn fx:id="contenuColumn" text="Contenu" prefWidth="200"/>
             <TableColumn fx:id="nbPointsColumn" text="Points gagnés" prefWidth="100"/>
             <TableColumn fx:id="datePublicationColumn" text="Date de publication" prefWidth="150"/>
-
         </columns>
     </TableView>
 </VBox>

@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.ComboBox?>
+<?import javafx.scene.layout.AnchorPane?>
+
+<?import javafx.collections.FXCollections?>
+<?import java.lang.String?>
+<AnchorPane prefHeight="200.0" prefWidth="400.0" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controllers.AjouterEtatStatutController">
+    <!-- ComboBox pour choisir l'utilisateur par son email -->
+    <ComboBox fx:id="emailComboBox" layoutX="30.0" layoutY="25.0" promptText="Choisir un utilisateur par son email" />
+
+
+    <!-- ComboBox pour choisir l'état du statut des dons -->
+    <ComboBox fx:id="etatComboBox" layoutX="30.0" layoutY="70.0" promptText="État du Statut des Dons">
+        <items>
+            <FXCollections fx:factory="observableArrayList">
+                <String fx:value="Recu" />
+                <String fx:value="En cours" />
+            </FXCollections>
+        </items>
+    </ComboBox>
+
+    <!-- Bouton Ajouter -->
+    <Button layoutX="150.0" layoutY="120.0" onAction="#handleAjouterEtatStatut" text="Ajouter État Statut Dons" />
+</AnchorPane>

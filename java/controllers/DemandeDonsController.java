@@ -9,12 +9,16 @@ import service.DemandeDonsService;
 import java.awt.event.ActionEvent;
 import java.util.Optional;
 import javafx.scene.image.ImageView;
+import javafx.scene.control.Button;
 
 
 public class DemandeDonsController {
 
     @FXML
     private TextArea contenuTextArea;
+
+    @FXML
+    private Button posterDemandeButton;
 
     @FXML
     private ImageView imageView;
@@ -45,7 +49,7 @@ public class DemandeDonsController {
                     sb.append("\nPoints gagnés: ").append(demande.getNbPoints()); // Utilisez la méthode getNbPoints() pour obtenir les points gagnés
 
                     // Vérifier si l'utilisateur connecté est l'auteur de la demande
-                    int userIdConnecte = 1; // ID de l'utilisateur connecté (à remplacer par l'ID réel de l'utilisateur connecté)
+                    int userIdConnecte = 2; // ID de l'utilisateur connecté (à remplacer par l'ID réel de l'utilisateur connecté)
                     if (demande.getIdUtilisateur() == userIdConnecte) {
                         // Ajouter un bouton Supprimer
                         Button deleteButton = new Button("Supprimer");
@@ -62,13 +66,21 @@ public class DemandeDonsController {
                 }
             }
         });
+
         // Charger les demandes existantes lors de l'initialisation
         loadDemandes();
+
+        // Ajouter un écouteur d'événement au bouton "Poster Demande"
+        posterDemandeButton.setOnAction(event -> posterDemande());
     }
+
+
+
+
 
     private void deleteDemande(DemandeDons demande) {
         // Vérifier si l'utilisateur connecté est l'auteur de la demande
-        int userIdConnecte = 1; // ID de l'utilisateur connecté (à remplacer par l'ID réel de l'utilisateur connecté)
+        int userIdConnecte = 3; // ID de l'utilisateur connecté (à remplacer par l'ID réel de l'utilisateur connecté)
         if (demande.getIdUtilisateur() == userIdConnecte) {
             // Confirmer la suppression avec une boîte de dialogue
             Alert confirmationDialog = new Alert(Alert.AlertType.CONFIRMATION);
@@ -93,6 +105,7 @@ public class DemandeDonsController {
 
 
 
+
     @FXML
     public void posterDemande() {
         // Récupérer le contenu de la demande
@@ -100,7 +113,7 @@ public class DemandeDonsController {
 
         // Créer un objet DemandeDons avec les informations
         DemandeDons nouvelleDemande = new DemandeDons();
-        nouvelleDemande.setIdUtilisateur(2); //
+        nouvelleDemande.setIdUtilisateur(3); // ID de l'utilisateur 3
         nouvelleDemande.setContenu(contenu);
 
         // Poster la demande en utilisant le service
