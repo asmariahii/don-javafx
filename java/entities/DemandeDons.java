@@ -20,6 +20,8 @@ public class DemandeDons {
 
     private int idUser;
 
+
+
     public DemandeDons(int idDemande, int idUtilisateur, String contenu, String image, Timestamp datePublication) {
         this.idDemande = idDemande;
         this.idUtilisateur = idUtilisateur;

@@ -177,11 +177,12 @@ public class FaireDonsController {
                 don.setNbPoints(newPointsValue);
                 donsService.updateDons(don); // Mettre à jour le don dans la base de données
                 // Mettre à jour l'affichage
-                loadDons(utilisateur.getIdUser());
+                loadDons(1);
             } catch (NumberFormatException e) {
                 showAlert(Alert.AlertType.ERROR, "Erreur", "Points invalides", "Veuillez entrer un nombre de points valide.");
             }
         });
+
     }
 
 

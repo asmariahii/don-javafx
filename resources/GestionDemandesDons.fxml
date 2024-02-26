@@ -1,17 +1,25 @@
 <?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.ComboBox?>
 <?import javafx.scene.control.TableColumn?>
 <?import javafx.scene.control.TableView?>
-<?import javafx.scene.layout.VBox?>
-<?import javafx.scene.control.cell.PropertyValueFactory?>
+<?import javafx.scene.layout.AnchorPane?>
 
-<VBox xmlns="http://javafx.com/javafx/16" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controllers.GestionDemandeDonsController">
-    <TableView fx:id="demandeDonsTableView">
-        <columns>
-            <TableColumn fx:id="nomUserColumn" text="Nom " prefWidth="150"/>
-            <TableColumn fx:id="prenomUserColumn" text="Prénom" prefWidth="150"/>
-            <TableColumn fx:id="contenuColumn" text="Contenu" prefWidth="200"/>
-            <TableColumn fx:id="nbPointsColumn" text="Points gagnés" prefWidth="100"/>
-            <TableColumn fx:id="datePublicationColumn" text="Date de publication" prefWidth="150"/>
-        </columns>
-    </TableView>
-</VBox>
+<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="625.0" prefWidth="885.0" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controllers.GestionDemandeDonsController">
+    <children>
+
+        <ComboBox fx:id="triComboBox" layoutX="662.0" layoutY="187.0" prefWidth="150.0" promptText="Trier par" />
+
+        <TableView fx:id="demandeDonsTableView" layoutX="59.0" layoutY="213.0" prefHeight="390.0" prefWidth="753.0">
+            <columns>
+                <TableColumn fx:id="nomUserColumn" prefWidth="90.4000244140625" text="Nom User" />
+                <TableColumn fx:id="prenomUserColumn" prefWidth="101.59993743896484" text="Prenom User" />
+                <TableColumn fx:id="contenuColumn" prefWidth="58.4000244140625" text="Contenu" />
+                <TableColumn fx:id="datePublicationColumn" prefWidth="158.0" text="Date Publication" />
+                <TableColumn fx:id="nbPointsColumn" prefWidth="137.60000610351562" text="Nombre de Points" />
+
+            </columns>
+        </TableView>
+
+    </children>
+</AnchorPane>

@@ -16,6 +16,7 @@ import service.DemandeDonsService;
 import entities.utilisateur;
 
 import java.text.SimpleDateFormat;
+import java.util.Comparator;
 import java.util.List;
 import java.util.Optional;
 
@@ -39,6 +40,9 @@ public class GestionDemandeDonsController {
     @FXML
     private TableColumn<DemandeDons, String> prenomUserColumn;
 
+    @FXML
+    private ComboBox<String> triComboBox;
+
     private DemandeDonsService demandeDonsService;
     private Stage primaryStage;
     private utilisateur utilisateurConnecte; // Utilisateur connecté
@@ -57,6 +61,10 @@ public class GestionDemandeDonsController {
 
     @FXML
     void initialize() {
+        // Remplissage du ComboBox de tri
+        ObservableList<String> options = FXCollections.observableArrayList("Croissant", "Décroissant");
+        triComboBox.setItems(options);
+
         contenuColumn.setCellValueFactory(data -> new SimpleStringProperty(data.getValue().getContenu()));
         datePublicationColumn.setCellValueFactory(data -> {
             SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
@@ -65,6 +73,17 @@ public class GestionDemandeDonsController {
         nbPointsColumn.setCellValueFactory(new PropertyValueFactory<>("nbPoints"));
         nomUserColumn.setCellValueFactory(data -> new SimpleStringProperty(data.getValue().getNomUser()));
         prenomUserColumn.setCellValueFactory(data -> new SimpleStringProperty(data.getValue().getPrenomUser()));
+
+        // Écouteur pour le ComboBox de tri
+        triComboBox.getSelectionModel().selectedItemProperty().addListener((observable, oldValue, newValue) -> {
+            if (newValue != null) {
+                if (newValue.equals("Croissant")) {
+                    trierParDatePublicationCroissant();
+                } else {
+                    trierParDatePublicationDecroissant();
+                }
+            }
+        });
 
         // Création d'une colonne de boutons pour supprimer une demande
         TableColumn<DemandeDons, Void> deleteButtonColumn = new TableColumn<>("Action");
@@ -211,6 +230,14 @@ public class GestionDemandeDonsController {
         alert.setHeaderText(null);
         alert.setContentText(message);
         alert.showAndWait();
+    }
+
+    private void trierParDatePublicationCroissant() {
+        demandeDonsTableView.getItems().sort(Comparator.comparing(DemandeDons::getDatePublication));
+    }
+
+    private void trierParDatePublicationDecroissant() {
+        demandeDonsTableView.getItems().sort(Comparator.comparing(DemandeDons::getDatePublication).reversed());
     }
 
 }

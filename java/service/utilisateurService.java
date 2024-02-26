@@ -119,5 +119,10 @@ public class utilisateurService {
             // Fermeture des ressources (PreparedStatement, ResultSet, etc.)
         }
     }
+
+
+
+
+
     // Ajoutez d'autres méthodes au besoin...
 }

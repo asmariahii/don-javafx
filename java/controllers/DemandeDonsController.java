@@ -13,6 +13,8 @@ import javafx.scene.control.Button;
 
 
 public class DemandeDonsController {
+    private int userIdConnecte = 2; // Définir directement l'ID de l'utilisateur connecté à 1
+
 
     @FXML
     private TextArea contenuTextArea;
@@ -33,6 +35,7 @@ public class DemandeDonsController {
     }
     @FXML
     public void initialize() {
+
         // Personnaliser l'affichage des demandes dans la ListView
         demandeListView.setCellFactory(param -> new ListCell<DemandeDons>() {
             @Override
@@ -46,10 +49,17 @@ public class DemandeDonsController {
                     sb.append("Utilisateur: ").append(demande.getNomUser()).append(" ").append(demande.getPrenomUser());
                     sb.append("\nContenu: ").append(demande.getContenu());
                     sb.append("\nDate de publication: ").append(demande.getDatePublication()); // Affichage de la date de publication
-                    sb.append("\nPoints gagnés: ").append(demande.getNbPoints()); // Utilisez la méthode getNbPoints() pour obtenir les points gagnés
+                    int pointsGagnes = demande.getNbPoints();
 
+                    // Vérifier si des points ont été transférés pour cette demande
+                    if (demande.getIdDons() != 0) {
+                        // Si oui, utiliser le nombre de points du don comme points gagnés
+                        pointsGagnes = demande.getNbPoints();
+                    }
+
+
+                    sb.append("\nPoints gagnés: ").append(pointsGagnes);
                     // Vérifier si l'utilisateur connecté est l'auteur de la demande
-                    int userIdConnecte = 2; // ID de l'utilisateur connecté (à remplacer par l'ID réel de l'utilisateur connecté)
                     if (demande.getIdUtilisateur() == userIdConnecte) {
                         // Ajouter un bouton Supprimer
                         Button deleteButton = new Button("Supprimer");
@@ -80,7 +90,7 @@ public class DemandeDonsController {
 
     private void deleteDemande(DemandeDons demande) {
         // Vérifier si l'utilisateur connecté est l'auteur de la demande
-        int userIdConnecte = 3; // ID de l'utilisateur connecté (à remplacer par l'ID réel de l'utilisateur connecté)
+        int userIdConnecte = 2; // ID de l'utilisateur connecté (à remplacer par l'ID réel de l'utilisateur connecté)
         if (demande.getIdUtilisateur() == userIdConnecte) {
             // Confirmer la suppression avec une boîte de dialogue
             Alert confirmationDialog = new Alert(Alert.AlertType.CONFIRMATION);
@@ -105,23 +115,36 @@ public class DemandeDonsController {
 
 
 
-
+    public void setUserIdConnecte(int userId) {
+        this.userIdConnecte = userId;
+    }
     @FXML
     public void posterDemande() {
-        // Récupérer le contenu de la demande
-        String contenu = contenuTextArea.getText();
+        // Vérifier si un utilisateur est connecté
+        if (userIdConnecte != 0) {
+            // Récupérer le contenu de la demande
+            String contenu = contenuTextArea.getText();
 
-        // Créer un objet DemandeDons avec les informations
-        DemandeDons nouvelleDemande = new DemandeDons();
-        nouvelleDemande.setIdUtilisateur(3); // ID de l'utilisateur 3
-        nouvelleDemande.setContenu(contenu);
+            // Créer un objet DemandeDons avec les informations
+            DemandeDons nouvelleDemande = new DemandeDons();
+            nouvelleDemande.setIdUtilisateur(userIdConnecte); // Utiliser l'ID de l'utilisateur connecté
+            nouvelleDemande.setContenu(contenu);
 
-        // Poster la demande en utilisant le service
-        demandeDonsService.posterDemande(nouvelleDemande);
+            // Poster la demande en utilisant le service
+            demandeDonsService.posterDemande(nouvelleDemande);
 
-        // Recharger les demandes pour afficher la nouvelle demande
-        loadDemandes();
+            // Réinitialiser le contenu du TextArea après la soumission de la demande
+            contenuTextArea.clear();
+
+            // Recharger les demandes pour afficher la nouvelle demande
+            loadDemandes();
+        } else {
+            // Afficher un message d'erreur si aucun utilisateur n'est connecté
+            afficherAlerte("Erreur", "Aucun utilisateur connecté.");
+        }
     }
+
+
     @FXML
     public void transferPoints() {
         DemandeDons selectedDemande = demandeListView.getSelectionModel().getSelectedItem();
@@ -141,16 +164,20 @@ public class DemandeDonsController {
                         int userId = selectedDemande.getIdUtilisateur(); // Récupérer l'ID de l'utilisateur associé à la demande
                         int idDemande = selectedDemande.getIdDemande(); // Récupérer l'ID de la demande
 
-                        // Appeler la méthode pour ajouter les dons pour la demande sélectionnée
-                        int donId = demandeDonsService.addDonsForDemande(userId, donPoints, idDemande);
-
-                        // Mettre à jour les points gagnés dans la demande sélectionnée en ajoutant les nouveaux points aux points existants
-                        if (donId != -1) { // Vérifier si l'ajout des dons a réussi
-                            selectedDemande.setNbPoints(selectedDemande.getNbPoints() + donPoints);
-                            // Rafraîchir l'affichage des demandes pour refléter les modifications
-                            loadDemandes();
+                        // Vérifier si l'utilisateur a suffisamment de points
+                        int userPoints = demandeDonsService.getUserPoints(userId);
+                        if (userPoints >= donPoints) {
+                            // Transférer les points et mettre à jour la demande
+                            int donId = demandeDonsService.addDonsForDemande(userId, donPoints, idDemande);
+                            if (donId != -1) { // Vérifier si l'ajout des dons a réussi
+                                selectedDemande.setNbPoints(selectedDemande.getNbPoints() + donPoints);
+                                // Rafraîchir l'affichage des demandes pour refléter les modifications
+                                loadDemandes();
+                            } else {
+                                afficherAlerte("Erreur", "Erreur lors de l'ajout des points pour la demande.");
+                            }
                         } else {
-                            afficherAlerte("Erreur", "Erreur lors de l'ajout des points pour la demande.");
+                            afficherAlerte("Erreur", "Points insuffisants. Vous avez actuellement " + userPoints + " points.");
                         }
                     } else {
                         afficherAlerte("Erreur", "Veuillez saisir un nombre valide de points.");
@@ -163,6 +190,7 @@ public class DemandeDonsController {
             afficherAlerte("Erreur", "Veuillez sélectionner une demande pour transférer des points.");
         }
     }
+
 
 
 

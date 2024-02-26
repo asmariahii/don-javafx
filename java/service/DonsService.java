@@ -8,6 +8,9 @@ import java.sql.*;
 import java.text.SimpleDateFormat;
 import java.util.*;
 import java.util.Date;
+import java.util.ArrayList;
+import java.util.List;
+
 
 public class DonsService implements IServiceDons {
     private Connection conn;
@@ -321,20 +324,26 @@ public class DonsService implements IServiceDons {
     }
 
 
-    public void addEtatStatutDons(int donsId, String nouvelEtat) {
-        try {
-            String query = "UPDATE Dons SET etatStatutDons = ? WHERE idDons = ?";
-            pst = conn.prepareStatement(query);
+    public void addEtatStatutDons(int idDons, String nouvelEtat) throws SQLException {
+        // Mettre à jour l'état du statut des dons pour le don spécifié
+        String query = "UPDATE Dons SET etatStatutDons = ? WHERE idDons = ?";
+        try (PreparedStatement pst = conn.prepareStatement(query)) {
             pst.setString(1, nouvelEtat);
-            pst.setInt(2, donsId);
+            pst.setInt(2, idDons);
             pst.executeUpdate();
-            System.out.println("État du statut de don mis à jour avec succès.");
-        } catch (SQLException e) {
-            System.out.println("Erreur lors de l'ajout de l'état du statut de don : " + e.getMessage());
-        } finally {
-            closeStatement();
+            System.out.println("État du statut de don mis à jour avec succès pour le don avec l'ID " + idDons);
         }
     }
+
+
+
+
+
+
+
+
+
+
 
     public void updateEtatStatutDons(int donsId, String nouvelEtat) {
         try {
@@ -417,36 +426,11 @@ public class DonsService implements IServiceDons {
         return -1; // Retourne -1 si aucune ID n'est trouvée ou s'il y a une erreur
     }
  //   @Override
- public int getDonsIdByEmail(String email) throws SQLException {
-     String query = "SELECT idDons FROM Dons JOIN Utilisateur ON Dons.idUser = Utilisateur.idUser WHERE emailUser = ?";
-     try (PreparedStatement pst = conn.prepareStatement(query)) {
-         pst.setString(1, email);
-         try (ResultSet rs = pst.executeQuery()) {
-             if (rs.next()) {
-                 return rs.getInt("idDons");
-             }
-         }
-     }
-     // Gérer le cas où aucun don n'est associé à cet e-mail
-     return -1;
- }
+
+
 
     // Méthode pour récupérer tous les e-mails des utilisateurs
-    public List<String> getAllUserEmailsAndPoints() throws SQLException {
-        List<String> userEmailsAndPoints = new ArrayList<>();
-        String query = "SELECT Utilisateur.emailUser, Dons.nbPoints " +
-                "FROM Utilisateur " +
-                "JOIN Dons ON Utilisateur.idUser = Dons.idUser";
-        try (PreparedStatement pst = conn.prepareStatement(query); ResultSet rs = pst.executeQuery()) {
-            while (rs.next()) {
-                String userEmail = rs.getString("emailUser");
-                int nbPoints = rs.getInt("nbPoints");
-                String userEmailAndPoints = userEmail + " - " + nbPoints;
-                userEmailsAndPoints.add(userEmailAndPoints);
-            }
-        }
-        return userEmailsAndPoints;
-    }
+
 
     public Map<String, Integer> getAllUserNbPoints() throws SQLException {
         Map<String, Integer> userNbPoints = new HashMap<>();
@@ -460,7 +444,18 @@ public class DonsService implements IServiceDons {
         }
         return userNbPoints;
     }
-
-
+    public int getDonsIdByEmail(String email) throws SQLException {
+        String query = "SELECT idDons FROM Dons JOIN Utilisateur ON Dons.idUser = Utilisateur.idUser WHERE emailUser = ?";
+        try (PreparedStatement pst = conn.prepareStatement(query)) {
+            pst.setString(1, email);
+            try (ResultSet rs = pst.executeQuery()) {
+                if (rs.next()) {
+                    return rs.getInt("idDons");
+                }
+            }
+        }
+        // Gérer le cas où aucun don n'est associé à cet e-mail
+        return -1;
+    }
 
 }

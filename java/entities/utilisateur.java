@@ -7,7 +7,7 @@ public class utilisateur {
     private String prenomUser;
     private String emailUser;
     private String numTel;
-
+    private int idDons; // L'identifiant du don associé à cet utilisateur
 
     public utilisateur(int idUser, int nbPoints, String nomUser, String prenomUser, String emailUser, String numTel) {
         this.idUser = idUser;
@@ -26,8 +26,15 @@ public class utilisateur {
         this.numTel = numTel;
     }
 
-    public utilisateur() {
+    public utilisateur(int idUser, String nom, String email, int nbPoints, int idDons) {
+        this.idUser = idUser;
+        this.nomUser = nom;
+        this.emailUser = email;
+        this.nbPoints = nbPoints;
+        this.idDons = idDons; // Assurez-vous d'initialiser idDons avec la valeur fournie
+    }
 
+    public utilisateur(int idUser, int nbPoints, String nom, String s, String email, String s1, int idDons, String s2) {
     }
 
     public int getIdUser() {
@@ -36,6 +43,7 @@ public class utilisateur {
 
     public void setIdUser(int idUser) {
         this.idUser = idUser;
+
     }
 
     public int getNbPoints() {
@@ -76,6 +84,10 @@ public class utilisateur {
 
     public void setNumTel(String numTel) {
         this.numTel = numTel;
+    }
+
+    public int getIdDons() {
+        return idDons;
     }
 
     @Override

@@ -14,8 +14,8 @@
                 <Font name="Calibri Bold Italic" size="15.0" />
             </font>
         </TextField>
-        <Button layoutX="305.0" layoutY="180.0" mnemonicParsing="false" onAction="#handleAjouterDon" prefHeight="50.0" prefWidth="141.0" text="Ajouter don" textFill="#2c8e21" textOverrun="WORD_ELLIPSIS" />
-        <VBox  alignment="CENTER" layoutX="216.0" layoutY="14.0" prefHeight="58.0" prefWidth="305.0">
+        <Button layoutX="305.0" layoutY="180.0" mnemonicParsing="false" onAction="#handleAjouterDons" prefHeight="50.0" prefWidth="141.0" text="Ajouter don" textFill="#2c8e21" textOverrun="WORD_ELLIPSIS" />
+        <VBox alignment="CENTER" layoutX="216.0" layoutY="14.0" prefHeight="58.0" prefWidth="305.0">
             <Label fx:id="pointsLabel" layoutX="216.0" layoutY="14.0" prefHeight="58.0" prefWidth="305.0" text="Points disponibles :" textFill="#e4a45b">
                 <font>
                     <Font name="Calibri Bold" size="36.0" />
@@ -23,13 +23,7 @@
             </Label>
         </VBox>
 
-        <VBox alignment="CENTER" layoutX="350.0" layoutY="50.0" prefHeight="58.0" prefWidth="305.0">
-            <Label fx:id="pointsDisponiblesLabel" layoutX="216.0" layoutY="140.0" prefHeight="58.0" prefWidth="305.0"  text="Votre texte ici" textFill="#ad741d">
-                <font>
-                    <Font name="Calibri Bold" size="20.0" />
-                </font>
-            </Label>
-        </VBox>
+        <VBox alignment="CENTER" layoutX="350.0" layoutY="50.0" prefHeight="58.0" prefWidth="305.0" />
 
 
 
@@ -38,15 +32,16 @@
                 <Font name="Calibri Bold" size="24.0" />
             </font>
         </Label>
-
-
-        <Label fx:id="donsLabel" layoutX="34.0" layoutY="310.0" prefHeight="400.0" prefWidth="600.0" textFill="blue">
+        <Label fx:id="donsLabel" layoutX="34.0" layoutY="235.0" prefHeight="400.0" prefWidth="600.0" textFill="#33302c">
             <font>
                 <Font name="Calibri Bold" size="14.0" />
             </font>
         </Label>
-
-
+         <Label fx:id="pointsDisponiblesLabel" layoutX="154.0" layoutY="49.0" prefHeight="58.0" prefWidth="305.0" text="Votre texte ici" textFill="#ad741d">
+             <font>
+                 <Font name="Calibri Bold" size="20.0" />
+             </font>
+         </Label>
 
     </children>
 </AnchorPane>

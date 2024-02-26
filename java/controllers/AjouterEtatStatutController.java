@@ -1,60 +1,85 @@
 package controllers;
 
+import entities.Dons;
+import entities.utilisateur;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.scene.control.ComboBox;
+import javafx.scene.control.ListCell;
 import service.DonsService;
+import service.utilisateurService;
 
 import java.sql.SQLException;
+import java.util.List;
+
 
 public class AjouterEtatStatutController {
+
+    private final DonsService donsService = new DonsService();
+    private final utilisateurService utilisateurService = new utilisateurService();
+
     @FXML
-    private ComboBox<String> emailComboBox;
+    private ComboBox<utilisateur> utilisateurComboBox;
 
     @FXML
     private ComboBox<String> etatComboBox;
 
-    private DonsService donsService; // Vous devez injecter une instance de DonsService ici
+    @FXML
+    private ComboBox<Dons> donsComboBox;
 
-    public void setDonsService(DonsService donsService) {
-        this.donsService = donsService;
-    }
-
-    public AjouterEtatStatutController(){
-        donsService = new DonsService();
-
-    }
     @FXML
     void initialize() {
-        try {
-            // Initialise la ComboBox avec les emails des utilisateurs
-            ObservableList<String> emails = FXCollections.observableArrayList(donsService.getAllUserEmailsAndPoints());
-            emailComboBox.setItems(emails);
-        } catch (SQLException e) {
-            System.out.println("Erreur lors de la récupération des emails des utilisateurs : " + e.getMessage());
+        // Récupérer la liste des dons avec les détails des utilisateurs
+        List<Dons> donsList = donsService.getAllDonsWithUserDetails();
+        ObservableList<Dons> observableDonsList = FXCollections.observableArrayList(donsList);
+        donsComboBox.setItems(observableDonsList);
+
+        // Définir la cellFactory personnalisée pour afficher les dons dans le ComboBox
+        donsComboBox.setCellFactory(param -> new DonListCell());
+
+        // Définir les options de la ComboBox d'état
+        ObservableList<String> etatOptions = FXCollections.observableArrayList("Recu", "En cours");
+        etatComboBox.setItems(etatOptions);
+    }
+
+    private static class DonListCell extends ListCell<Dons> {
+        @Override
+        protected void updateItem(Dons don, boolean empty) {
+            super.updateItem(don, empty);
+
+            if (empty || don == null) {
+                setText(null);
+            } else {
+                // Personnalisez l'affichage du don ici
+                setText(don.getNomUser() + " " + don.getPrenomUser() + " - " + don.getEmailUser() + " - Points: " + don.getNbPoints() + " - Statut: " + don.getEtatStatutDons());
+            }
         }
     }
+
+
 
     @FXML
     void handleAjouterEtatStatut() {
-        String selectedEmail = emailComboBox.getValue();
+        Dons selectedDon = donsComboBox.getValue();
         String selectedEtat = etatComboBox.getValue();
 
-        if (selectedEmail != null && selectedEtat != null) {
+        if (selectedDon != null && selectedEtat != null) {
+            int idDons = selectedDon.getIdDons(); // Récupérer l'ID du don à partir de la liste des dons
             try {
-                int donsId = donsService.getDonsIdByEmail(selectedEmail);
-                if (donsId != -1) {
-                    donsService.addEtatStatutDons(donsId, selectedEtat);
-                    System.out.println("État du statut de don ajouté avec succès.");
-                } else {
-                    System.out.println("Aucun don associé à cet email.");
-                }
+                donsService.addEtatStatutDons(idDons, selectedEtat);
+                System.out.println("État du statut de don ajouté avec succès pour le don avec l'ID " + idDons);
             } catch (SQLException e) {
-                System.out.println("Erreur lors de l'ajout de l'état du statut de don : " + e.getMessage());
+                e.printStackTrace();
             }
         } else {
-            System.out.println("Veuillez sélectionner un utilisateur et un état.");
+            System.out.println("Veuillez sélectionner un don et un état.");
         }
     }
+
+
+
+
+
+
 }
