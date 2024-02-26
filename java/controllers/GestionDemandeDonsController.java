@@ -11,10 +11,14 @@ import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
+import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
+import javafx.scene.layout.AnchorPane;
 import javafx.stage.Stage;
 import service.DemandeDonsService;
 import entities.utilisateur;
 
+import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.Comparator;
 import java.util.List;
@@ -42,6 +46,8 @@ public class GestionDemandeDonsController {
 
     @FXML
     private ComboBox<String> triComboBox;
+    @FXML
+    private AnchorPane rootPane;
 
     private DemandeDonsService demandeDonsService;
     private Stage primaryStage;
@@ -62,22 +68,23 @@ public class GestionDemandeDonsController {
     @FXML
     void initialize() {
         // Remplissage du ComboBox de tri
-        ObservableList<String> options = FXCollections.observableArrayList("Croissant", "Décroissant");
+        ObservableList<String> options = FXCollections.observableArrayList(" Ordre Croissant", "Ordre Décroissant");
         triComboBox.setItems(options);
 
+        // Configuration des colonnes existantes
+        nomUserColumn.setCellValueFactory(data -> new SimpleStringProperty(data.getValue().getNomUser()));
+        prenomUserColumn.setCellValueFactory(data -> new SimpleStringProperty(data.getValue().getPrenomUser()));
         contenuColumn.setCellValueFactory(data -> new SimpleStringProperty(data.getValue().getContenu()));
         datePublicationColumn.setCellValueFactory(data -> {
             SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
             return new SimpleStringProperty(dateFormat.format(data.getValue().getDatePublication()));
         });
         nbPointsColumn.setCellValueFactory(new PropertyValueFactory<>("nbPoints"));
-        nomUserColumn.setCellValueFactory(data -> new SimpleStringProperty(data.getValue().getNomUser()));
-        prenomUserColumn.setCellValueFactory(data -> new SimpleStringProperty(data.getValue().getPrenomUser()));
 
         // Écouteur pour le ComboBox de tri
         triComboBox.getSelectionModel().selectedItemProperty().addListener((observable, oldValue, newValue) -> {
             if (newValue != null) {
-                if (newValue.equals("Croissant")) {
+                if (newValue.equals(" Ordre Croissant")) {
                     trierParDatePublicationCroissant();
                 } else {
                     trierParDatePublicationDecroissant();
@@ -89,10 +96,18 @@ public class GestionDemandeDonsController {
         TableColumn<DemandeDons, Void> deleteButtonColumn = new TableColumn<>("Action");
         deleteButtonColumn.setPrefWidth(100);
         deleteButtonColumn.setCellFactory(param -> new TableCell<>() {
-            private final Button deleteButton = new Button("Supprimer");
+            private final Button deleteButton = new Button();
 
             {
-                deleteButton.setOnAction(event -> {
+                // Ajouter une icône de suppression au bouton
+                Image image = new Image(getClass().getResourceAsStream("/img/deleteimg.png"));
+                ImageView imageView = new ImageView(image);
+                imageView.setFitWidth(16); // Ajustez la taille de l'icône si nécessaire
+                imageView.setFitHeight(16);
+                deleteButton.setGraphic(imageView);
+
+                // Définir l'action du bouton
+                deleteButton.setOnAction((event) -> {
                     DemandeDons demande = getTableView().getItems().get(getIndex());
                     if (demande != null) {
                         deleteDemande(demande);
@@ -101,6 +116,7 @@ public class GestionDemandeDonsController {
                     }
                 });
             }
+
 
             @Override
             protected void updateItem(Void item, boolean empty) {
@@ -117,9 +133,17 @@ public class GestionDemandeDonsController {
         TableColumn<DemandeDons, Void> ajouterPointsColumn = new TableColumn<>("Ajouter Points");
         ajouterPointsColumn.setPrefWidth(100);
         ajouterPointsColumn.setCellFactory(param -> new TableCell<>() {
-            private final Button ajouterButton = new Button("Ajouter");
+            private final Button ajouterButton = new Button();
 
             {
+                // Ajouter une icône à bouton
+                Image image = new Image(getClass().getResourceAsStream("/img/ajouterp.png"));
+                ImageView imageView = new ImageView(image);
+                imageView.setFitWidth(16); // Ajustez la taille de l'icône si nécessaire
+                imageView.setFitHeight(16);
+                ajouterButton.setGraphic(imageView);
+
+                // Définir l'action du bouton
                 ajouterButton.setOnAction(event -> {
                     DemandeDons demande = getTableView().getItems().get(getIndex());
                     if (demande != null) {
@@ -141,10 +165,13 @@ public class GestionDemandeDonsController {
             }
         });
 
-        demandeDonsTableView.getColumns().addAll(deleteButtonColumn, ajouterPointsColumn);
+        // Ajout des colonnes après les autres colonnes existantes
+        demandeDonsTableView.getColumns().addAll( deleteButtonColumn, ajouterPointsColumn);
 
         loadDemandes();
     }
+
+
 
     private void loadDemandes() {
         List<DemandeDons> demandes = demandeDonsService.getDemandesAvecUsers();
@@ -240,4 +267,25 @@ public class GestionDemandeDonsController {
         demandeDonsTableView.getItems().sort(Comparator.comparing(DemandeDons::getDatePublication).reversed());
     }
 
+
+    @FXML
+    private void handleGestionDons() {
+        try {
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/AfficherDons.fxml"));
+            Parent root = loader.load();
+            AfficherDonsController afficherDonsController = loader.getController();
+            afficherDonsController.initialize();
+            Scene scene = rootPane.getScene();
+            scene.setRoot(root);
+        } catch (IOException e) {
+            e.printStackTrace();
+            showAlert(Alert.AlertType.ERROR, "Erreur", "Impossible de charger la vue pour gérer les demandes de dons.");
+        }}
+    private void showAlert(Alert.AlertType alertType, String title, String message) {
+        Alert alert = new Alert(alertType);
+        alert.setTitle(title);
+        alert.setHeaderText(null);
+        alert.setContentText(message);
+        alert.showAndWait();
+    }
 }

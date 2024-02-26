@@ -13,9 +13,11 @@ import javafx.scene.control.Button;
 import entities.Dons;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
+import javafx.scene.layout.AnchorPane;
 import javafx.stage.Stage;
 import service.DonsService;
 
+import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.List;
 import javafx.scene.control.cell.PropertyValueFactory;
@@ -35,6 +37,10 @@ public class AfficherDonsController {
 
     @FXML
     private TableView<Dons> donsTable;
+
+    @FXML
+    private AnchorPane rootPane;
+
 
     @FXML
     private TableColumn<Dons, String> nomUserColumn;
@@ -204,5 +210,20 @@ public class AfficherDonsController {
             showAlert(Alert.AlertType.ERROR, "Erreur de suppression", "Impossible de supprimer le don.");
         }
     }
+
+    @FXML
+    private void handleGestionDemandesDons() {
+        try {
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/GestionDemandesDons.fxml"));
+            Parent root = loader.load();
+            GestionDemandeDonsController gestionDemandeDonsController = loader.getController();
+            gestionDemandeDonsController.initialize();
+            Scene scene = rootPane.getScene();
+            scene.setRoot(root);
+        } catch (IOException e) {
+            e.printStackTrace();
+            showAlert(Alert.AlertType.ERROR, "Erreur", "Impossible de charger la vue pour gérer les demandes de dons.");
+        }}
+
 
 }

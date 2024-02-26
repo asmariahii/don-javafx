@@ -39,7 +39,7 @@ public class AjouterEtatStatutController {
         donsComboBox.setCellFactory(param -> new DonListCell());
 
         // Définir les options de la ComboBox d'état
-        ObservableList<String> etatOptions = FXCollections.observableArrayList("Recu", "En cours");
+        ObservableList<String> etatOptions = FXCollections.observableArrayList("Reçu", "En cours");
         etatComboBox.setItems(etatOptions);
     }
 

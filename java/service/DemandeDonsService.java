@@ -140,7 +140,6 @@ public class DemandeDonsService {
         return donId;
     }
 
-
     private void updateTotalPointsGagnes(int idDemande) {
         try {
             // Récupérer le total des points gagnés pour la demande spécifiée
@@ -153,16 +152,18 @@ public class DemandeDonsService {
                 int totalPoints = resultSet.getInt(1);
 
                 // Mettre à jour le total des points gagnés dans la demande
-                String updateTotalPointsQuery = "UPDATE demandedons SET nbpoints = ? WHERE idDemande = ?";
+                String updateTotalPointsQuery = "UPDATE demandedons SET totalPointsGagnes = ? WHERE idDemande = ?";
                 pst = conn.prepareStatement(updateTotalPointsQuery);
                 pst.setInt(1, totalPoints);
                 pst.setInt(2, idDemande);
                 pst.executeUpdate();
             }
         } catch (SQLException e) {
-            System.out.println("Erreur lors de la mise à jour du total des points gagnés : " + e.getMessage());
+            System.out.println("Erreur lors de la récupération du total des points gagnés : " + e.getMessage());
         }
     }
+
+
 
 
 
@@ -261,6 +262,7 @@ public class DemandeDonsService {
 
         return userPoints;
     }
+
 
 
 

@@ -20,6 +20,17 @@ public class DemandeDons {
 
     private int idUser;
 
+    public int getTotalPointsGagnes() {
+        return totalPointsGagnes;
+    }
+
+    public void setTotalPointsGagnes(int totalPointsGagnes) {
+        this.totalPointsGagnes = totalPointsGagnes;
+    }
+
+    private int totalPointsGagnes;
+
+
 
 
     public DemandeDons(int idDemande, int idUtilisateur, String contenu, String image, Timestamp datePublication) {

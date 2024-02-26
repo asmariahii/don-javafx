@@ -209,23 +209,27 @@ public class FaireDonsController {
                         " points effectué le " + don.getDate_ajout() +
                         " est " + don.getEtatStatutDons());
 
-                Button btnUpdate = new Button("Modifier");
-                btnUpdate.setOnAction(event -> {
-                    showModifierDialog(don);
-                });
+                Button btnUpdate = new Button();
 
-                // Créer l'icône de suppression sous forme d'ImageView
-                ImageView deleteIcon = new ImageView(new Image(getClass().getResourceAsStream("/img/deleteimg.png")));
-                deleteIcon.setFitWidth(20); // Définir la largeur de l'icône
-                deleteIcon.setFitHeight(20); // Définir la hauteur de l'icône
+                {
+                    // Ajouter une icône au bouton
+                    Image image = new Image(getClass().getResourceAsStream("/img/modifier.png"));
+                    ImageView imageView = new ImageView(image);
+                    imageView.setFitWidth(16); // Ajustez la taille de l'icône si nécessaire
+                    imageView.setFitHeight(16);
+                    btnUpdate.setGraphic(imageView);
 
-                // Créer un événement pour supprimer le don lorsqu'on clique sur l'icône
-                deleteIcon.setOnMouseClicked(event -> {
-                    handleSupprimerDon(don);
-                });
+                    // Définir l'action du bouton
+                    btnUpdate.setOnAction(event -> {
+                        showModifierDialog(don);
+                    });
+                }
+
+
+
 
                 // Créer un conteneur pour les boutons
-                HBox buttonsContainer = new HBox(btnUpdate, deleteIcon);
+                HBox buttonsContainer = new HBox(btnUpdate);
 
                 // Ajouter les éléments dans l'ordre souhaité à la HBox
                 hbox.getChildren().addAll(donLabel, buttonsContainer);

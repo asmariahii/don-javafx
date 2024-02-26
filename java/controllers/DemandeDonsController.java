@@ -3,6 +3,7 @@ package controllers;
 import entities.DemandeDons;
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
+import javafx.scene.image.Image;
 import javafx.scene.layout.VBox;
 import service.DemandeDonsService;
 
@@ -13,7 +14,7 @@ import javafx.scene.control.Button;
 
 
 public class DemandeDonsController {
-    private int userIdConnecte = 2; // Définir directement l'ID de l'utilisateur connecté à 1
+    private int userIdConnecte = 1; // Définir directement l'ID de l'utilisateur connecté à 1
 
 
     @FXML
@@ -61,9 +62,14 @@ public class DemandeDonsController {
                     sb.append("\nPoints gagnés: ").append(pointsGagnes);
                     // Vérifier si l'utilisateur connecté est l'auteur de la demande
                     if (demande.getIdUtilisateur() == userIdConnecte) {
-                        // Ajouter un bouton Supprimer
+                        // Ajouter un bouton Supprimer avec une icône
                         Button deleteButton = new Button("Supprimer");
+                        ImageView imageView = new ImageView(new Image(getClass().getResourceAsStream("/img/deleteimg.png")));
+                        imageView.setFitWidth(16); // Ajustez la largeur de l'icône
+                        imageView.setFitHeight(16); // Ajustez la hauteur de l'icône
+                        deleteButton.setGraphic(imageView);
                         deleteButton.setOnAction(event -> deleteDemande(demande));
+
 
                         // Créer un conteneur pour afficher le texte et le bouton Supprimer
                         VBox container = new VBox(new Label(sb.toString()), deleteButton);
@@ -90,7 +96,7 @@ public class DemandeDonsController {
 
     private void deleteDemande(DemandeDons demande) {
         // Vérifier si l'utilisateur connecté est l'auteur de la demande
-        int userIdConnecte = 2; // ID de l'utilisateur connecté (à remplacer par l'ID réel de l'utilisateur connecté)
+        int userIdConnecte = 1; // ID de l'utilisateur connecté (à remplacer par l'ID réel de l'utilisateur connecté)
         if (demande.getIdUtilisateur() == userIdConnecte) {
             // Confirmer la suppression avec une boîte de dialogue
             Alert confirmationDialog = new Alert(Alert.AlertType.CONFIRMATION);
@@ -167,12 +173,17 @@ public class DemandeDonsController {
                         // Vérifier si l'utilisateur a suffisamment de points
                         int userPoints = demandeDonsService.getUserPoints(userId);
                         if (userPoints >= donPoints) {
-                            // Transférer les points et mettre à jour la demande
+                            // Appeler la méthode pour ajouter les dons pour la demande sélectionnée
                             int donId = demandeDonsService.addDonsForDemande(userId, donPoints, idDemande);
+
+                            // Mettre à jour les points gagnés dans la demande sélectionnée en ajoutant les nouveaux points aux points existants
                             if (donId != -1) { // Vérifier si l'ajout des dons a réussi
                                 selectedDemande.setNbPoints(selectedDemande.getNbPoints() + donPoints);
+                                selectedDemande.setTotalPointsGagnes(selectedDemande.getTotalPointsGagnes() + donPoints);
+
                                 // Rafraîchir l'affichage des demandes pour refléter les modifications
                                 loadDemandes();
+                                // Mettre à jour le total des points gagnés après l'ajout des dons
                             } else {
                                 afficherAlerte("Erreur", "Erreur lors de l'ajout des points pour la demande.");
                             }

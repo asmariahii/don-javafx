@@ -4,20 +4,23 @@
 <?import javafx.scene.control.ListView?>
 <?import javafx.scene.control.TextArea?>
 <?import javafx.scene.layout.AnchorPane?>
-<?import javafx.scene.layout.VBox?>
-<?import javafx.scene.text.TextFlow?>
+<?import javafx.scene.text.Font?>
+<?import javafx.scene.text.Text?>
 
 <AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="628.0" prefWidth="804.0" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controllers.DemandeDonsController">
     <children>
-        <VBox alignment="CENTER" prefWidth="728.0" spacing="20.0" AnchorPane.bottomAnchor="20.0" AnchorPane.leftAnchor="20.0" AnchorPane.rightAnchor="20.0" AnchorPane.topAnchor="20.0">
-            <children>
-            <TextFlow prefHeight="82.0" prefWidth="764.0" />
-                <TextArea fx:id="contenuTextArea" prefHeight="63.0" prefWidth="589.0" promptText="Contenu de la demande" />
+                <TextArea fx:id="contenuTextArea" layoutX="227.0" layoutY="64.0" prefHeight="126.0" prefWidth="350.0" promptText="Contenu de la demande">
+         <font>
+            <Font size="16.0" />
+         </font></TextArea>
                 <!-- Ajoutez le composant pour l'image ici si nécessaire -->
-                <Button fx:id="posterDemandeButton" onAction="#posterDemande" text="Poster Demande" />
-                <Button fx:id="transferButton" onAction="#transferPoints" text="Transférer Points" />
-                <ListView fx:id="demandeListView" prefHeight="151.0" prefWidth="560.0" />
-            </children>
-        </VBox>
+                <Button fx:id="posterDemandeButton" layoutX="352.0" layoutY="198.0" onAction="#posterDemande" text="Poster Demande" />
+                <Button fx:id="transferButton" layoutX="670.0" layoutY="258.0" onAction="#transferPoints" prefHeight="26.0" prefWidth="119.0" text="Participer" />
+                <ListView fx:id="demandeListView" layoutX="14.0" layoutY="284.0" prefHeight="336.0" prefWidth="780.0" style="-fx-border-width: #E6AA67;" />
+      <Text fill="#e78713" layoutX="221.0" layoutY="46.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Créez votre demande de dons ici" wrappingWidth="426.70037841796875">
+         <font>
+            <Font name="Cambria Italic" size="28.0" />
+         </font>
+      </Text>
     </children>
 </AnchorPane>
